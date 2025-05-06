@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Primary 5 Science Quiz</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background-color: #e0f7fa;
+      color: #004d40;
+      padding: 20px;
+    }
+    .quiz-container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .question {
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      font-size: 1em;
+      background-color: #b2ebf2;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .options button.selected {
+      background-color: #81c784;
+    }
+    .options button:hover {
+      background-color: #4dd0e1;
+    }
+    #timer {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      text-align: right;
+      color: #d32f2f;
+    }
+    #result {
+      font-size: 1.5em;
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: center;
+      color: #2e7d32;
+    }
+    .review-container {
+      margin-top: 30px;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    .review-item {
+      background-color: #f1f8e9;
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 5px solid #7cb342;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <div id="timer">Time Left: 30:00</div>
+    <div id="question-container"></div>
+    <div id="result"></div>
+    <div class="review-container" id="review"></div>
+  </div>
+
+  <script>
+    const questions = [
+      { question: "1. The sun is a...", options: ["A. Planet", "B. Star", "C. Moon", "D. Light bulb"], answer: "B. Star" },
+      { question: "2. Which organ helps in breathing?", options: ["A. Liver", "B. Brain", "C. Lung", "D. Heart"], answer: "C. Lung" },
+      { question: "3. What do bees produce?", options: ["A. Milk", "B. Honey", "C. Butter", "D. Sugar"], answer: "B. Honey" },
+      { question: "4. Which of these is used to measure temperature?", options: ["A. Ruler", "B. Thermometer", "C. Scale", "D. Clock"], answer: "B. Thermometer" },
+      { question: "5. Which sense organ is used to hear?", options: ["A. Eye", "B. Nose", "C. Ear", "D. Skin"], answer: "C. Ear" },
+      { question: "6. A caterpillar becomes a...", options: ["A. Frog", "B. Bird", "C. Butterfly", "D. Fish"], answer: "C. Butterfly" },
+      { question: "7. Water boils at...", options: ["A. 0°C", "B. 25°C", "C. 50°C", "D. 100°C"], answer: "D. 100°C" },
+      { question: "8. The Earth moves around the...", options: ["A. Moon", "B. Mars", "C. Sun", "D. Cloud"], answer: "C. Sun" },
+      { question: "9. The smallest unit of life is a...", options: ["A. Plant", "B. Organ", "C. Cell", "D. Atom"], answer: "C. Cell" },
+      { question: "10. A solid changes to liquid by...", options: ["A. Cooling", "B. Melting", "C. Freezing", "D. Boiling"], answer: "B. Melting" },
+      { question: "11. We breathe in...", options: ["A. Carbon dioxide", "B. Nitrogen", "C. Hydrogen", "D. Oxygen"], answer: "D. Oxygen" },
+      { question: "12. Which of these is a source of light?", options: ["A. Moon", "B. Mirror", "C. Torch", "D. Book"], answer: "C. Torch" },
+      { question: "13. Which of these floats in water?", options: ["A. Stone", "B. Iron", "C. Plastic", "D. Brick"], answer: "C. Plastic" },
+      { question: "14. A baby frog is called a...", options: ["A. Chick", "B. Cub", "C. Tadpole", "D. Calf"], answer: "C. Tadpole" },
+      { question: "15. Which one is a vertebrate?", options: ["A. Earthworm", "B. Lizard", "C. Snail", "D. Ant"], answer: "B. Lizard" },
+      { question: "16. Plants make their food using...", options: ["A. Oxygen", "B. Sunlight", "C. Water only", "D. Wind"], answer: "B. Sunlight" },
+      { question: "17. The heart pumps...", options: ["A. Water", "B. Blood", "C. Air", "D. Oil"], answer: "B. Blood" },
+      { question: "18. Matter exists in how many states?", options: ["A. 1", "B. 2", "C. 3", "D. 4"], answer: "C. 3" },
+      { question: "19. Ice changes to water by...", options: ["A. Boiling", "B. Melting", "C. Evaporating", "D. Cooling"], answer: "B. Melting" },
+      { question: "20. Which is not a source of water?", options: ["A. Rain", "B. Well", "C. Tap", "D. Fire"], answer: "D. Fire" },
+      { question: "21. Which of these can dissolve in water?", options: ["A. Sand", "B. Oil", "C. Salt", "D. Stone"], answer: "C. Salt" },
+      { question: "22. Animals that eat only plants are called...", options: ["A. Carnivores", "B. Omnivores", "C. Herbivores", "D. Predators"], answer: "C. Herbivores" },
+      { question: "23. The moon gets its light from...", options: ["A. Stars", "B. Fire", "C. Sun", "D. Torch"], answer: "C. Sun" },
+      { question: "24. Which metal is attracted to a magnet?", options: ["A. Copper", "B. Gold", "C. Iron", "D. Silver"], answer: "C. Iron" },
+      { question: "25. What is used to see small things?", options: ["A. Ruler", "B. Glass", "C. Microscope", "D. Telescope"], answer: "C. Microscope" },
+      { question: "26. Which of these causes pollution?", options: ["A. Trees", "B. Smoke", "C. Rain", "D. Clouds"], answer: "B. Smoke" },
+      { question: "27. Which one is a renewable resource?", options: ["A. Coal", "B. Petrol", "C. Sunlight", "D. Diesel"], answer: "C. Sunlight" },
+      { question: "28. Which organ helps in digestion?", options: ["A. Heart", "B. Lungs", "C. Stomach", "D. Brain"], answer: "C. Stomach" },
+      { question: "29. What is the main source of energy for Earth?", options: ["A. Wind", "B. Fire", "C. Sun", "D. Water"], answer: "C. Sun" },
+      { question: "30. Which of these is a gas at room temperature?", options: ["A. Ice", "B. Oxygen", "C. Water", "D. Salt"], answer: "B. Oxygen" }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answers = Array(questions.length).fill(null);
+    let totalTime = 30 * 60; // 30 minutes
+    const timerDisplay = document.getElementById("timer");
+
+    function updateTimer() {
+      const minutes = Math.floor(totalTime / 60);
+      const seconds = totalTime % 60;
+      timerDisplay.textContent = `Time Left: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      if (totalTime > 0) {
+        totalTime--;
+        setTimeout(updateTimer, 1000);
+      } else {
+        showResult();
+      }
+    }
+
+    function showQuestion(index) {
+      const container = document.getElementById("question-container");
+      const q = questions[index];
+      container.innerHTML = `
+        <div class="question">${q.question}</div>
+        <div class="options">
+          ${q.options.map((opt) => `<button onclick="selectAnswer(${index}, '${opt}', this)">${opt}</button>`).join('')}
+        </div>
+      `;
+    }
+
+    function selectAnswer(qIndex, option, element) {
+      answers[qIndex] = option;
+      const buttons = document.querySelectorAll('.options button');
+      buttons.forEach(btn => btn.classList.remove('selected'));
+      element.classList.add('selected');
+      setTimeout(() => {
+        if (currentQuestion < questions.length - 1) {
+          currentQuestion++;
+          showQuestion(currentQuestion);
+        } else {
+          showResult();
+        }
+      }, 700);
+    }
+
+    function showResult() {
+      score = answers.reduce((acc, answer, i) => acc + (answer === questions[i].answer ? 1 : 0), 0);
+      document.getElementById("result").textContent = `You scored ${score} out of ${questions.length}`;
+      const review = document.getElementById("review");
+      review.innerHTML = "<h3>Review of your answers:</h3>" +
+        questions.map((q, i) => `
+          <div class="review-item">
+            ${q.question}<br />
+            Your answer: ${answers[i] || "Not answered"}<br />
+            Correct answer: ${q.answer}
+          </div>`).join('');
+    }
+
+    showQuestion(currentQuestion);
+    updateTimer();
+  </script>
+</body>
+</html>
